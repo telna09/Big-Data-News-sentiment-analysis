@@ -15,7 +15,7 @@ st.title("📰 Real-time News Sentiment Classification Dashboard")
 # -----------------------------
 @st.cache_resource
 def load_model():
-    model = joblib.load("sentiment_model.pkl")
+    model = joblib.load("sentiment_pipeline_model.pkl")
     vectorizer = joblib.load("vectorizer.pkl")
     return model, vectorizer
 
