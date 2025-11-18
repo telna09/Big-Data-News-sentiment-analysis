@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-import requests
+from textblob import TextBlobimport requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -17,7 +16,7 @@ st.set_page_config(
 def load_analyzer():
     return SentimentIntensityAnalyzer()
 
-analyzer = load_analyzer()
+#analyzer = load_analyzer()
 
 # Function to fetch headlines from RSS
 @st.cache_data(ttl=300)  # Cache for 5 minutes
@@ -40,15 +39,23 @@ def fetch_headlines_from_rss(rss_url="http://feeds.bbci.co.uk/news/rss.xml", max
 
 # Function to analyze sentiment
 def get_sentiment(text):
-    """Analyze sentiment using VADER"""
-    scores = analyzer.polarity_scores(text)
-    compound = scores["compound"]
+    """Analyze sentiment using TextBlob"""
+    blob = TextBlob(text)
+    polarity = blob.sentiment.polarity
     
-    if compound >= 0.05:
+    # Convert to VADER-like format
+    scores = {
+        'compound': polarity,
+        'pos': max(0, polarity),
+        'neu': 1 - abs(polarity),
+        'neg': abs(min(0, polarity))
+    }
+    
+    if polarity >= 0.05:
         sentiment = "Positive"
         emoji = "😊"
         color = "green"
-    elif compound <= -0.05:
+    elif polarity <= -0.05:
         sentiment = "Negative"
         emoji = "😟"
         color = "red"
