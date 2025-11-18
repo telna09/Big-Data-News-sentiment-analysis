@@ -1,10 +1,8 @@
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import requests
 from bs4 import BeautifulSoup
-import time
 from datetime import datetime
 
 # Page configuration
@@ -144,25 +142,24 @@ if analysis_mode == "Single Headline":
             with col3:
                 st.metric("Confidence", f"{abs(scores['compound'])*100:.1f}%")
             
-            # Detailed scores
+            # Detailed scores using Streamlit's native bar chart
             st.subheader("📈 Detailed Sentiment Scores")
             score_df = pd.DataFrame({
                 'Sentiment': ['Positive', 'Neutral', 'Negative'],
                 'Score': [scores['pos'], scores['neu'], scores['neg']]
             })
             
-            fig = go.Figure(data=[
-                go.Bar(
-                    x=score_df['Sentiment'],
-                    y=score_df['Score'],
-                    marker_color=['green', 'gray', 'red'],
-                    text=score_df['Score'],
-                    texttemplate='%{text:.3f}',
-                    textposition='outside'
-                )
-            ])
-            fig.update_layout(showlegend=False, height=400)
-            st.plotly_chart(fig, use_container_width=True)
+            # Use Streamlit's native bar chart
+            st.bar_chart(score_df.set_index('Sentiment'))
+            
+            # Display values as text
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Positive", f"{scores['pos']:.3f}")
+            with col2:
+                st.metric("Neutral", f"{scores['neu']:.3f}")
+            with col3:
+                st.metric("Negative", f"{scores['neg']:.3f}")
 
 elif analysis_mode == "Batch Analysis":
     st.subheader("📝 Batch Analysis")
@@ -224,21 +221,13 @@ elif analysis_mode == "Batch Analysis":
                 with col3:
                     st.metric("😟 Negative", negative_count, f"{negative_count/len(results)*100:.1f}%")
                 
-                # Pie chart
+                # Sentiment distribution using native chart
                 st.subheader("📊 Sentiment Distribution")
                 sentiment_counts = pd.DataFrame({
-                    'Sentiment': ['Positive', 'Neutral', 'Negative'],
                     'Count': [positive_count, neutral_count, negative_count]
-                })
+                }, index=['Positive', 'Neutral', 'Negative'])
                 
-                fig = go.Figure(data=[
-                    go.Pie(
-                        labels=sentiment_counts['Sentiment'],
-                        values=sentiment_counts['Count'],
-                        marker=dict(colors=['green', 'gray', 'red'])
-                    )
-                ])
-                st.plotly_chart(fig, use_container_width=True)
+                st.bar_chart(sentiment_counts)
                 
                 # Results table
                 st.subheader("📋 Detailed Results")
@@ -324,29 +313,13 @@ elif analysis_mode == "Live RSS Feed":
                 with col3:
                     st.metric("😟 Negative", negative_count, f"{negative_count/len(results)*100:.1f}%")
                 
-                # Visualization
+                # Visualization using native chart
                 st.subheader("📊 Real-Time Sentiment Overview")
                 sentiment_data = pd.DataFrame({
-                    'Sentiment': ['Positive', 'Neutral', 'Negative'],
                     'Count': [positive_count, neutral_count, negative_count]
-                })
+                }, index=['Positive', 'Neutral', 'Negative'])
                 
-                fig = go.Figure(data=[
-                    go.Bar(
-                        x=sentiment_data['Sentiment'],
-                        y=sentiment_data['Count'],
-                        marker_color=['green', 'gray', 'red'],
-                        text=sentiment_data['Count'],
-                        textposition='auto'
-                    )
-                ])
-                fig.update_layout(
-                    title="Sentiment Distribution",
-                    xaxis_title="Sentiment",
-                    yaxis_title="Count",
-                    height=400
-                )
-                st.plotly_chart(fig, use_container_width=True)
+                st.bar_chart(sentiment_data)
                 
                 # Display headlines
                 st.subheader("📰 Analyzed Headlines")
