@@ -232,11 +232,11 @@ elif analysis_mode == "Batch Analysis":
                 })
                 
                fig = go.Figure(data=[
-                    go.Pie(
-                        labels=sentiment_counts['Sentiment'],
-                        values=sentiment_counts['Count'],
-                        marker=dict(colors=['green', 'gray', 'red'])
-                     )
+                   go.Pie(
+                       labels=sentiment_counts['Sentiment'],
+                       values=sentiment_counts['Count'],
+                       marker=dict(colors=['green', 'gray', 'red'])
+                    )
                 ])
                 
                 st.plotly_chart(fig, use_container_width=True)
