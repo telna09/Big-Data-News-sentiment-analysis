@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-from textblob import TextBlobimport requests
+from textblob import TextBlob
+import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -10,13 +11,6 @@ st.set_page_config(
     page_icon="📰",
     layout="wide"
 )
-
-# Initialize VADER sentiment analyzer
-@st.cache_resource
-def load_analyzer():
-    return SentimentIntensityAnalyzer()
-
-#analyzer = load_analyzer()
 
 # Function to fetch headlines from RSS
 @st.cache_data(ttl=300)  # Cache for 5 minutes
@@ -360,6 +354,6 @@ if st.session_state.analysis_history:
 st.divider()
 st.markdown("""
     <div style='text-align: center; color: gray;'>
-        <p>Powered by VADER Sentiment Analysis | Built with Streamlit</p>
+        <p>Powered by TextBlob Sentiment Analysis | Built with Streamlit</p>
     </div>
 """, unsafe_allow_html=True)
