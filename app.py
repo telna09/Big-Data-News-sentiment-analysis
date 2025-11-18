@@ -231,7 +231,7 @@ elif analysis_mode == "Batch Analysis":
                     'Count': [positive_count, neutral_count, negative_count]
                 })
                 
-               fig = go.Figure(data=[
+                fig = go.Figure(data=[
                    go.Pie(
                        labels=sentiment_counts['Sentiment'],
                        values=sentiment_counts['Count'],
