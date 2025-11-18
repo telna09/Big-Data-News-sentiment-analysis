@@ -152,15 +152,15 @@ if analysis_mode == "Single Headline":
             })
             
             fig = go.Figure(data=[
-    go.Bar(
-        x=score_df['Sentiment'],
-        y=score_df['Score'],
-        marker_color=['green', 'gray', 'red'],
-        text=score_df['Score'],
-        texttemplate='%{text:.3f}',
-        textposition='outside'
-    )
-])
+                go.Bar(
+                    x=score_df['Sentiment'],
+                    y=score_df['Score'],
+                    marker_color=['green', 'gray', 'red'],
+                    text=score_df['Score'],
+                    texttemplate='%{text:.3f}',
+                    textposition='outside'
+                )
+            ])
             fig.update_layout(showlegend=False, height=400)
             st.plotly_chart(fig, use_container_width=True)
 
@@ -232,13 +232,12 @@ elif analysis_mode == "Batch Analysis":
                 })
                 
                 fig = go.Figure(data=[
-                   go.Pie(
-                       labels=sentiment_counts['Sentiment'],
-                       values=sentiment_counts['Count'],
-                       marker=dict(colors=['green', 'gray', 'red'])
+                    go.Pie(
+                        labels=sentiment_counts['Sentiment'],
+                        values=sentiment_counts['Count'],
+                        marker=dict(colors=['green', 'gray', 'red'])
                     )
                 ])
-                
                 st.plotly_chart(fig, use_container_width=True)
                 
                 # Results table
