@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import requests
@@ -152,15 +151,16 @@ if analysis_mode == "Single Headline":
                 'Score': [scores['pos'], scores['neu'], scores['neg']]
             })
             
-            fig = px.bar(
-                score_df,
-                x='Sentiment',
-                y='Score',
-                color='Sentiment',
-                color_discrete_map={'Positive': 'green', 'Neutral': 'gray', 'Negative': 'red'},
-                text='Score'
-            )
-            fig.update_traces(texttemplate='%{text:.3f}', textposition='outside')
+            fig = go.Figure(data=[
+    go.Bar(
+        x=score_df['Sentiment'],
+        y=score_df['Score'],
+        marker_color=['green', 'gray', 'red'],
+        text=score_df['Score'],
+        texttemplate='%{text:.3f}',
+        textposition='outside'
+    )
+])
             fig.update_layout(showlegend=False, height=400)
             st.plotly_chart(fig, use_container_width=True)
 
@@ -231,13 +231,14 @@ elif analysis_mode == "Batch Analysis":
                     'Count': [positive_count, neutral_count, negative_count]
                 })
                 
-                fig = px.pie(
-                    sentiment_counts,
-                    values='Count',
-                    names='Sentiment',
-                    color='Sentiment',
-                    color_discrete_map={'Positive': 'green', 'Neutral': 'gray', 'Negative': 'red'}
-                )
+               fig = go.Figure(data=[
+                    go.Pie(
+                        labels=sentiment_counts['Sentiment'],
+                        values=sentiment_counts['Count'],
+                        marker=dict(colors=['green', 'gray', 'red'])
+                     )
+                ])
+                
                 st.plotly_chart(fig, use_container_width=True)
                 
                 # Results table
